@@ -64,7 +64,7 @@ class Sciebo:
             # Upload to Sciebo
             sciebo_url = f"{cls.SCIEBO_STATE_BASEURL}{json_file_name}"
             with open(json_file_path, "rb") as file:
-                file.name="rn_"+file_name
+                file.name="rn_"+file.name
                 print('State json file is found and ready to upload')
                 response = requests.put(sciebo_url, data=file, auth=(cls.SCIEBO_USERNAME, cls.SCIEBO_PASSWORD))
 
