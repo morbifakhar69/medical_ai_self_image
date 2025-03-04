@@ -30,14 +30,18 @@ class Sciebo:
 
         file_name = os.path.basename(file_path)
         file_extension = os.path.splitext(file_path)[1]
-        sciebo_url = f"{cls.SCIEBO_IMAGE_BASEURL}{uuid}{file_extension}"
+        sciebo_url = f"{cls.SCIEBO_IMAGE_BASEURL}rn_{uuid}{file_extension}"
 
         try:
-            print('Trying to upload image in Sciebo.')
+            
             with open(file_path, "rb") as file:
-                file.name="rn_"+file_name
-                print("Image File name: ",file.name)
-                response = requests.put(sciebo_url, data=file, auth=(cls.SCIEBO_USERNAME, cls.SCIEBO_PASSWORD))
+                print("UUID of Image: ",uuid)
+                print("Sciebo URL of Image: ",sciebo_url)
+                response = requests.put(
+        sciebo_url,
+        data=file,  # Use 'files' instead of 'data'
+        auth=(cls.SCIEBO_USERNAME, cls.SCIEBO_PASSWORD),
+    )
 
             if response.status_code in [201, 204]:
                 st.success(f"✅ Image '{file_name}' uploaded successfully to Sciebo.")
@@ -62,15 +66,16 @@ class Sciebo:
 
         try:
             # Convert session state to JSON
-            print('Trying to upload state data in Sciebo.')
             # Upload to Sciebo
-            sciebo_url = f"{cls.SCIEBO_STATE_BASEURL}{json_file_name}"
+            sciebo_url = f"{cls.SCIEBO_STATE_BASEURL}rn_{json_file_name}"
             with open(json_file_path, "rb") as file:
-                file.name="rn_"+json_file_name
-                print("State File name: ",file.name)
-
-                print('State json file is found and ready to upload')
-                response = requests.put(sciebo_url, data=file, auth=(cls.SCIEBO_USERNAME, cls.SCIEBO_PASSWORD))
+                print("UUID of State: ",uuid)
+                print("Sciebo URL of State: ",sciebo_url)
+                response = requests.put(
+        sciebo_url,
+        files={"file": file},  # Use 'files' instead of 'data'
+        auth=(cls.SCIEBO_USERNAME, cls.SCIEBO_PASSWORD),
+    )
 
             if response.status_code in [201, 204]:
                 st.success(f"✅ Session state uploaded successfully as '{json_file_name}' to Sciebo.")
